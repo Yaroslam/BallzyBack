@@ -41,7 +41,8 @@ class Shoe extends Model
 		'link',
 		'img',
 		'price_euro',
-		'price_roubles'
+		'price_roubles',
+        'img_server_path'
 	];
 
 	public function brand()

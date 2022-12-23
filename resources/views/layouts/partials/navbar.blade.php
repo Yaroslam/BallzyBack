@@ -31,6 +31,7 @@
           <li><a href="{{ route("addToMarket") }}" class="nav-link">Upload</a></li>
           <li><a href="{{ route("cleanMarket") }}" class="nav-link">Clean</a></li>
           <li><a href="{{ route("createAlbums") }}" class="nav-link">Create Albums</a></li>
+          <li><a href="{{ route("test") }}" class="nav-link">Test</a></li>
       </ul>
 
       @auth

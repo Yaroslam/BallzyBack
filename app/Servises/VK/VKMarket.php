@@ -14,10 +14,13 @@ class VKMarket extends VKApiClient
     }
 
 
-    public function addToMarket($photoData, $name, $desc, $category, $price){
+    public function addToMarket($photoData, $name, $desc, $category, $price)
+    {
         sleep(3);
-        return $this->market()->add(env("VK_API_KEY"), ['owner_id' => "-".env("VK_PUBLICK_ID"), 'name' => $name, 'description' => $desc, 'category_id' => $category,
-                                                      'price' => $price, 'main_photo_id' => $photoData[0]['id']]);
+        $a = $this->market()->add(env("VK_API_KEY"), ['owner_id' => "-" . env("VK_PUBLICK_ID"), 'name' => $name, 'description' => $desc, 'category_id' => $category,
+            'price' => $price, 'main_photo_id' => $photoData[0]['id']]);
+        var_dump($a);
+        return $a;
     }
 
     public function getMarketProducts(){

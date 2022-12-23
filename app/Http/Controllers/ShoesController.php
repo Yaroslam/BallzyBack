@@ -32,7 +32,9 @@ class ShoesController extends Controller
      */
     public function create()
     {
-        //
+        ParseJob::dispatch();
+        return Response(redirect()->route('Shoes.index')
+            ->with('Start parse'));
     }
 
     /**
@@ -43,9 +45,7 @@ class ShoesController extends Controller
      */
     public function store(Request $request)
     {
-        ParseJob::dispatch();
-        return Response(redirect()->route('Shoes.index')
-            ->with('Start parse'));
+
     }
 
     /**

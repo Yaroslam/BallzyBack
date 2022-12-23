@@ -17,10 +17,10 @@ function parse(): void
 
     $requester = new RequestClient();
     $requester->setURL("https://ballzy.eu/lt/shoes");
-//
+
     $parser = new ManShoesParserClass();
     $shoesCardParser = new ManShoesParserClass();
-//
+
     $requester->makeGetRequest();
     $body = (string)$requester->getResponse()->getBody();
     $parser->setDocument($body);
@@ -29,6 +29,7 @@ function parse(): void
     $brands = $parser->getBrands();
     $brandsCount = $parser->countBrands();
     foreach (array_keys($brands) as $brand) {
+        var_dump($brand);
         $brandId = $brands[$brand];
         if (!$db->Select("Brands", [], ['brand_name'], ['brand_name'], [$brand], ['='])) {
             $db->EnterToTable(['brand_name'], [$brand], "Brands");
@@ -41,6 +42,7 @@ function parse(): void
         $parser->setDocument($body);
 
         while ($brandsCount[$brand] > 0) {
+            var_dump($page);
             $requester->setURL("https://ballzy.eu/lt/shoes.html?brands=$brandId&p=$page");
             $page++;
             $requester->makeGetRequest();
@@ -58,10 +60,11 @@ function parse(): void
                         $body = (string)$requester->getResponse()->getBody();
                         $shoesCardParser->setDocument($body);
 
-
                         $shoesImg = $shoesCardParser->getShoesImage();
                         $shoesName = $shoesCardParser->getShoesName();
                         $shoesPrice = $shoesCardParser->getShoesPrice();
+                        $fileName = md5(basename($shoesImg));
+                        file_put_contents(resource_path()."/".$fileName.".jpg", file_get_contents($shoesImg));
                         $brandTableId = $db->Select("Brands", [], "*", ["brand_name"], [$brand], ["="])['brand_id'];
                         $sizes = $shoesCardParser->getSizes($body)["[data-role=swatch-options]"]["Magento_Swatches/js/swatch-renderer"]["jsonConfig"]["attributes"]['139']["options"];
                         $sizesId = [];
@@ -77,8 +80,8 @@ function parse(): void
                         }
 
                         if (!$db->Select("Shoes", [], ['link'], ['link'], [$linkToShoes], ['='])) {
-                            $db->EnterToTable(["shoes_name", "brand_id", "link", "img", "price_euro", "price_roubles"],
-                                [$shoesName, $brandTableId, $linkToShoes, $shoesImg, $shoesPrice, $shoesPrice * 62.78 + 9000], "Shoes");
+                            $db->EnterToTable(["shoes_name", "brand_id", "link", "img", "price_euro", "price_roubles", "img_server_path"],
+                                [$shoesName, $brandTableId, $linkToShoes, $shoesImg, $shoesPrice, $shoesPrice * 62.78 + 9000, resource_path()."/".$fileName.".jpg"], "Shoes");
                         }
 
                         $shoeId = $db->Select("Shoes", [], ['shoe_id'], ['link'], [$linkToShoes], ['='])['shoe_id'];
@@ -87,8 +90,6 @@ function parse(): void
                                 $db->EnterToTable(["shoe_id", 'size_id'], [$shoeId, $id], "Shoes_sizes");
                             }
                         }
-
-
                     }
                 }
             }

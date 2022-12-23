@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Shoe;
 use App\Servises\VK\VKImage;
 use App\Servises\VK\VKMarket;
+use App\Servises\XML\XMLCreator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,10 +14,15 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Servises\Image;
 use Illuminate\Support\Collection;
+use VK\Exceptions\Api\VKApiServerException;
+use VK\Exceptions\Api\VKApiTooManyException;
+use VK\Exceptions\Api\VKApiUnknownException;
 
 class VkAddToMarketJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $tries = 3;
     /**
      * Create a new job instance.
      *
@@ -35,23 +41,53 @@ class VkAddToMarketJob implements ShouldQueue
      */
     public function handle()
     {
-            $VkImage = new VKImage();
-            $VkMarket = new VKMarket();
-            foreach ($this->shoes as $shoe){
-                    $photoData = $VkImage->loadImage($shoe->img);
-                    if(!$photoData){
-                        continue;
-                    }
-                    $desc = "Доступные размеры ";
-                    foreach ($shoe->shoes_sizes as $size) {
-                        $desc = $desc . $size->size->size . " EU ";
-                    }
-                    $marketItemId = $VkMarket->addToMarket($photoData, $shoe->shoes_name, $desc, env("VK_SHOES_CATEGORY_ID"), $shoe->price_roubles)['market_item_id'];
-                    Shoe::where("shoe_id", $shoe->shoe_id)->update(["inMarket" => 1, "market_id" => $marketItemId]);
-                    file_put_contents(__DIR__.'/log.txt', getimagesize($shoe->img)[3] . PHP_EOL, FILE_APPEND);
-                    $VkMarket->addToMarketInAlbum($shoe->brand->AlbumId, $marketItemId);
+        $xml = new XMLCreator("new.xml");
+        $xml->openNode("yml_catalog", ["date" => "2021-04-01 12:20"]);
+        $xml->openNode("shop");
+        $xml->openNode("currencies");
+        $xml->openNode("currency" , ["id" => "RUB" ,"rate" =>"1"]);
+        $xml->closeNode("currency");
+        $xml->closeNode("currencies");
+        $xml->openNode("offers");
+
+        foreach ($this->shoes as $shoe){
+            $desc = "Доступные размеры ";
+            foreach ($shoe->shoes_sizes as $size) {
+                $desc = $desc . $size->size->size . " EU ";
             }
-            var_dump(1);
+
+            $xml->openNode("offer", ['id' => $shoe->shoe_id, "available" =>"true"]);
+
+            $xml->openNode("price");
+            $xml->NodeText($shoe->price_roubles);
+            $xml->closeNode("price");
+
+            $xml->openNode("currencyId");
+            $xml->NodeText("RUB");
+            $xml->closeNode("currencyId");
+
+            $xml->openNode("categoryId");
+            $xml->NodeText(env("VK_SHOES_CATEGORY_ID"));
+            $xml->closeNode("categoryId");
+
+            $xml->openNode("picture");
+            $xml->NodeText($shoe->img);
+            $xml->closeNode("picture");
+
+            $xml->openNode("name");
+            $xml->NodeText($shoe->shoes_name);
+            $xml->closeNode("name");
+
+            $xml->openNode("description");
+            $xml->NodeText($desc);
+            $xml->closeNode("description");
+
+            $xml->closeNode("offer");
+        }
+
+        $xml->closeNode("offers");
+        $xml->closeNode("shop");
+        $xml->closeNode("yml_catalog");
 
     }
 }

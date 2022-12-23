@@ -26,8 +26,9 @@ class VKImage extends VKApiClient
                 [
                     'name'     => 'file',
                     'contents' => file_get_contents($pathToFile),
-                    'filename' => $pathToFile
+                    'filename' => $pathToFile,
                 ]]]);
+        var_dump(json_decode($response->getBody(), true));
         return $this->savePhotoInServer($response->getBody());
     }
 
@@ -35,6 +36,7 @@ class VKImage extends VKApiClient
     private function savePhotoInServer($serverResponse){
         $serverResponseArray = json_decode($serverResponse, true);
         if(!array_key_exists("photo", $serverResponseArray)){
+            var_dump($serverResponseArray['error']);
             return false;
         }
         $photo = stripslashes($serverResponseArray['photo']);
