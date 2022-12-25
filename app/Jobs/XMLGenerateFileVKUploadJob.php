@@ -37,8 +37,7 @@ class XMLGenerateFileVKUploadJob implements ShouldQueue
         $xml->openNode("yml_catalog", ["date" => "2021-04-01 12:20"]);
         $xml->openNode("shop");
         $xml->openNode("currencies");
-        $xml->openNode("currency" , ["id" => "RUB" ,"rate" =>"1"]);
-        $xml->closeNode("currency");
+        $xml->openNode("currency" , ["id" => "RUB" ,"rate" =>"1"], true);
         $xml->closeNode("currencies");
         $xml->openNode("offers");
 

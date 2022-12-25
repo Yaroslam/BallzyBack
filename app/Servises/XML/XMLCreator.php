@@ -15,7 +15,7 @@ class XMLCreator
         file_put_contents(__DIR__.$this->file, "<?xml version=\"1.0\" encoding=\"utf-8\"?>" . PHP_EOL, FILE_APPEND);
     }
 
-    public function openNode($nodeName, $nodeParam = [])
+    public function openNode($nodeName, $nodeParam = [], $soloClose = false)
     {
         $this->nodes[] = $nodeName;
         $nodeString = '<'.$nodeName;
@@ -23,7 +23,11 @@ class XMLCreator
         foreach (array_keys($nodeParam) as $param){
             $nodeString = $nodeString." $param=\"$nodeParam[$param]\"";
         }
-        $nodeString.=">";
+        if($soloClose){
+            $nodeString.="/>";
+        } else {
+            $nodeString.=">";
+        }
         file_put_contents(__DIR__.$this->file, $nodeString . PHP_EOL, FILE_APPEND);
 
     }

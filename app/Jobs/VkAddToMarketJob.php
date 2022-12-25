@@ -42,12 +42,5 @@ class VkAddToMarketJob implements ShouldQueue
     public function handle()
     {
         $vkMarket = new VKMarket();
-
-
-
-
-
-
-
     }
 }
