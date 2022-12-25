@@ -41,53 +41,13 @@ class VkAddToMarketJob implements ShouldQueue
      */
     public function handle()
     {
-        $xml = new XMLCreator("new.xml");
-        $xml->openNode("yml_catalog", ["date" => "2021-04-01 12:20"]);
-        $xml->openNode("shop");
-        $xml->openNode("currencies");
-        $xml->openNode("currency" , ["id" => "RUB" ,"rate" =>"1"]);
-        $xml->closeNode("currency");
-        $xml->closeNode("currencies");
-        $xml->openNode("offers");
+        $vkMarket = new VKMarket();
 
-        foreach ($this->shoes as $shoe){
-            $desc = "Доступные размеры ";
-            foreach ($shoe->shoes_sizes as $size) {
-                $desc = $desc . $size->size->size . " EU ";
-            }
 
-            $xml->openNode("offer", ['id' => $shoe->shoe_id, "available" =>"true"]);
 
-            $xml->openNode("price");
-            $xml->NodeText($shoe->price_roubles);
-            $xml->closeNode("price");
 
-            $xml->openNode("currencyId");
-            $xml->NodeText("RUB");
-            $xml->closeNode("currencyId");
 
-            $xml->openNode("categoryId");
-            $xml->NodeText(env("VK_SHOES_CATEGORY_ID"));
-            $xml->closeNode("categoryId");
 
-            $xml->openNode("picture");
-            $xml->NodeText($shoe->img);
-            $xml->closeNode("picture");
-
-            $xml->openNode("name");
-            $xml->NodeText($shoe->shoes_name);
-            $xml->closeNode("name");
-
-            $xml->openNode("description");
-            $xml->NodeText($desc);
-            $xml->closeNode("description");
-
-            $xml->closeNode("offer");
-        }
-
-        $xml->closeNode("offers");
-        $xml->closeNode("shop");
-        $xml->closeNode("yml_catalog");
 
     }
 }

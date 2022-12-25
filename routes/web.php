@@ -22,5 +22,6 @@ Route::prefix("market")->group(function () {
     Route::get('getMarketProduct', [\App\Http\Controllers\VKcontroller::class, "getMarketProducts"])->name("getMarketProducts");
     Route::get('cleanMarket', [\App\Http\Controllers\VKcontroller::class, "cleanMarket"])->name("cleanMarket");
     Route::get('createAlbums', [\App\Http\Controllers\VKcontroller::class, "createAlbums"])->name("createAlbums");
+    Route::get('generateUploadFile', [\App\Http\Controllers\VKcontroller::class, "generateUploadFile"])->name("generateUploadFile");
     Route::get('test', [\App\Http\Controllers\VKcontroller::class, "test"])->name("test");
 });

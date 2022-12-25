@@ -6,6 +6,7 @@ use App\Jobs\CreateAlbumJob;
 use App\Jobs\DecorateJob;
 use App\Jobs\VkAddToMarketJob;
 use App\Jobs\VkCleanMarketJob;
+use App\Jobs\XMLGenerateFileVKUploadJob;
 use App\Models\Shoe;
 use App\Servises\VK\VKImage;
 use App\Servises\VK\VKMarket;
@@ -17,18 +18,6 @@ use VK\OAuth\Scopes\VKOAuthUserScope;
 
 class VKcontroller extends Controller
 {
-
-//    public function addToMarket(){
-//        $id = Shoe::first()->shoe_id;
-//        $queueArray = [];
-//        $shoesCount = Shoe::count();
-//        for ($i=$shoesCount; $i>0; $i-=10){
-//            $shoeRange = Shoe::whereBetween('shoe_id', [$id, $id+=10])->get();
-//            $queueArray[] = new VkAddToMarketJob($shoeRange);
-//        }
-//        Bus::chain($queueArray)->dispatch();
-//        return Response(redirect()->route('Shoes.index'));
-//    }
 
     public function addToMarket(){
         VkAddToMarketJob::dispatch(Shoe::all());
@@ -52,4 +41,9 @@ class VKcontroller extends Controller
             ->with('Start parse'));
     }
 
+    public function generateUploadFile(){
+        XMLGenerateFileVKUploadJob::dispatch(Shoe::all())->onQueue('default');
+        return Response(redirect()->route('Shoes.index')
+            ->with('Start parse'));
+    }
 }

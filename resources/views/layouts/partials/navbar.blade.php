@@ -28,7 +28,7 @@
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="/" class="nav-link @linkactive('/')">Home</a></li>
           <li><a href="{{ route("Shoes.create") }}" class="nav-link">Parse</a></li>
-          <li><a href="{{ route("addToMarket") }}" class="nav-link">Upload</a></li>
+          <li><a href="{{ route("generateUploadFile") }}" class="nav-link">Generate File</a></li>
           <li><a href="{{ route("cleanMarket") }}" class="nav-link">Clean</a></li>
           <li><a href="{{ route("createAlbums") }}" class="nav-link">Create Albums</a></li>
           <li><a href="{{ route("test") }}" class="nav-link">Test</a></li>
