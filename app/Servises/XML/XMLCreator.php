@@ -28,12 +28,12 @@ class XMLCreator
         } else {
             $nodeString.=">";
         }
-        file_put_contents(__DIR__.$this->file, $nodeString . PHP_EOL, FILE_APPEND);
+        file_put_contents(__DIR__.$this->file, $nodeString, FILE_APPEND);
 
     }
 
     public function NodeText($text){
-        file_put_contents(__DIR__.$this->file, $text . PHP_EOL, FILE_APPEND);
+        file_put_contents(__DIR__.$this->file, $text    , FILE_APPEND);
     }
 
     public function closeNode($nodeName): int|string

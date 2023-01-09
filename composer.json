@@ -9,6 +9,7 @@
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-http": "*",
+        "ext-imagick": "*",
         "ext-json": "*",
         "ext-libxml": "*",
         "ext-mbstring": "*",
@@ -16,7 +17,7 @@
         "electrolinux/phpquery": "^0.9.6",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
-        "laravel/sanctum": "^3.0",
+        "laravel/sanctum": "^3.1",
         "laravel/tinker": "^2.7",
         "nyholm/psr7": "^1.5",
         "paquettg/php-html-parser": "^3.1",
@@ -26,8 +27,7 @@
         "symfony/psr-http-message-bridge": "^2.1",
         "vkcom/vk-php-sdk": "^5.101",
         "vladimir-yuldashev/laravel-queue-rabbitmq": "^13.0",
-        "vlucas/phpdotenv": "^5.4",
-      "ext-imagick": "*"
+        "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
